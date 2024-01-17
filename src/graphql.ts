@@ -8,6 +8,14 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export interface SignupInput {
+    username: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+}
+
 export interface Comment {
     id: number;
     content: string;
@@ -31,13 +39,21 @@ export interface Post {
 export interface User {
     id: number;
     username: string;
-    firstName?: Nullable<string>;
-    lastName?: Nullable<string>;
-    email?: Nullable<string>;
+    password: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    profilePicture?: Nullable<string>;
+    dob: string;
 }
 
 export interface IQuery {
-    user(id: number): Nullable<User> | Promise<Nullable<User>>;
+    getUser(id: number): Nullable<User> | Promise<Nullable<User>>;
+}
+
+export interface IMutation {
+    signup(user: SignupInput): Nullable<User> | Promise<Nullable<User>>;
+    removeUser(id: number): Nullable<User> | Promise<Nullable<User>>;
 }
 
 type Nullable<T> = T | null;

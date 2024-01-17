@@ -1,11 +1,30 @@
 type User {
   id: Int!
   username: String!
-  firstName: String
-  lastName: String
-  email: String
+  password: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+  profilePicture: String
+  dob: String!
+}
+
+input SignupInput {
+  username: String!
+  password: String!
+  firstName: String!
+  lastName: String!
+  email: String!
 }
 
 type Query {
-  user(id: Int!): User
+  getUser(id: Int!): User
+}
+
+type Mutation {
+  signup(user: SignupInput!): User
+}
+
+type Mutation {
+  removeUser(id: Int!): User
 }
