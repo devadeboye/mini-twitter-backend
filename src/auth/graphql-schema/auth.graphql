@@ -27,5 +27,5 @@ type Mutation {
 }
 
 type Mutation {
-  signin(credentials: SigninInput): SigninResponse
+  signin(credentials: SigninInput!): SigninResponse
 }

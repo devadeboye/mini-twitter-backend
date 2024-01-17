@@ -1,8 +1,8 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from '../services/auth.service';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/services/user.service';
-import { NotFoundException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 
 @Resolver('auth')
 export class AuthResolver {
@@ -12,24 +12,35 @@ export class AuthResolver {
   ) {}
 
   @Mutation()
-  async signup(@Args('user') user: User) {
+  async signup(@Args('user') user: User, @Context() context: any) {
     const passwordHash = await this.authService.hashPassword(user.password);
     user.password = passwordHash;
-    // TODO implement cookie and send to FE
-    return this.userService.createRecord(user);
+    const savedUser = await this.userService.createRecord(user);
+
+    const accessToken = await this.authService.generateJwt({
+      sub: savedUser.id,
+      username: savedUser.username,
+    });
+
+    this.authService.setCookie(context, 'twitter-clone', accessToken);
+    return savedUser;
   }
 
   @Mutation()
-  async signin(@Args('user') user: User) {
+  async signin(@Args('credentials') user: User, @Context() context: any) {
     const userProfile = await this.userService.findByUsernameOrEmail(
       user.username,
     );
     if (!userProfile) {
-      throw new NotFoundException('user does not exist');
+      throw new UnauthorizedException('invalid login credentials');
     }
     await this.authService.verifyPassword(user.password, userProfile.password);
+    const accessToken = await this.authService.generateJwt({
+      sub: userProfile.id,
+      username: userProfile.username,
+    });
 
-    // TODO implement cookie and send to FE
-    return { ...userProfile, success: true };
+    this.authService.setCookie(context, 'twitter-clone', accessToken);
+    return userProfile;
   }
 }

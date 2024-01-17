@@ -7,4 +7,12 @@ export enum EnvironmentEnum {
   TYPEORM_PASSWORD = 'TYPEORM_PASSWORD',
   TYPEORM_DATABASE = 'TYPEORM_DATABASE',
   TYPEORM_SYNCHRONIZE = 'TYPEORM_SYNCHRONIZE',
+  NODE_ENV = 'NODE_ENV',
+  TOKEN_SECRET = 'TOKEN_SECRET',
+}
+
+export enum EnvironmentType {
+  production = 'production',
+  development = 'development',
+  staging = 'staging',
 }

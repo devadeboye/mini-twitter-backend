@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
-import { Entity, FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
+import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()

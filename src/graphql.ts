@@ -34,7 +34,7 @@ export interface SigninResponse {
 
 export interface IMutation {
     signup(user: SignupInput): Nullable<User> | Promise<Nullable<User>>;
-    signin(credentials?: Nullable<SigninInput>): Nullable<SigninResponse> | Promise<Nullable<SigninResponse>>;
+    signin(credentials: SigninInput): Nullable<SigninResponse> | Promise<Nullable<SigninResponse>>;
     removeUser(id: number): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
 }
 
