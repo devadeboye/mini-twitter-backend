@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from '../services/user.service';
-import { User } from '../entities/user.entity';
+import { Logger } from '@nestjs/common';
 
 @Resolver('User')
 export class UserResolver {
@@ -8,16 +8,16 @@ export class UserResolver {
 
   @Query()
   async getUser(@Args('id') id: number) {
-    return this.userService.findById(id);
+    return this.userService.findOneBy({ id });
   }
 
-  @Mutation()
-  async signup(@Args('user') user: User) {
-    return this.userService.create(user);
+  @Query()
+  async getUserByUsernameOrEmail(@Args('identifier') identifier: string) {
+    return this.userService.findByUsernameOrEmail(identifier);
   }
 
   @Mutation()
   async removeUser(@Args('id') id: number) {
-    return this.userService.remove(id);
+    return this.userService.remove({ id });
   }
 }

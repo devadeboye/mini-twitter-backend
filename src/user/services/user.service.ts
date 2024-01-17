@@ -1,28 +1,25 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
+import { BaseService } from 'src/utils/services/base.service';
 
 @Injectable()
-export class UserService {
+export class UserService extends BaseService<User> {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) {}
-
-  findById(id: number): Promise<User | null> {
-    return this.usersRepository.findOneBy({ id });
+  ) {
+    super(usersRepository);
   }
 
-  async remove(id: number): Promise<void> {
-    await this.usersRepository.delete(id);
-  }
+  async findByUsernameOrEmail(identifier: string): Promise<User | null> {
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.username = :identifier', { identifier })
+      .orWhere('user.email = :identifier', { identifier })
+      .getOne();
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find();
-  }
-
-  create(user: User) {
-    return this.usersRepository.save(user);
+    return user;
   }
 }

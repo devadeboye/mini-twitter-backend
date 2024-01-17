@@ -1,15 +1,18 @@
-type User {
-  id: Int!
+input SignupInput {
   username: String!
   password: String!
   firstName: String!
   lastName: String!
   email: String!
-  profilePicture: String
   dob: String!
 }
 
-type UserSearchResponse {
+input SigninInput {
+  username: String! # this could be a username or email
+  password: String!
+}
+
+type SigninResponse {
   id: Int!
   username: String!
   firstName: String!
@@ -19,14 +22,10 @@ type UserSearchResponse {
   dob: String!
 }
 
-type Query {
-  getUser(id: Int!): UserSearchResponse
-}
-
-type Query {
-  getUserByUsernameOrEmail(identifier: String!): UserSearchResponse
+type Mutation {
+  signup(user: SignupInput!): User
 }
 
 type Mutation {
-  removeUser(id: Int!): UserSearchResponse
+  signin(credentials: SigninInput): SigninResponse
 }
