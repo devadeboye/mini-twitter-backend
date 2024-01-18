@@ -23,4 +23,8 @@ export class UserResolver {
   async removeUser(@Args('id') id: string) {
     return this.userService.remove({ id });
   }
+
+  // TODO add resolver to follow a user
+
+  // TODO add resolver to unfollow a user
 }

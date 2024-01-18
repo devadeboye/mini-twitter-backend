@@ -67,6 +67,9 @@ export interface User {
     email: string;
     profilePicture?: Nullable<string>;
     dob: string;
+    followers: Nullable<User>[];
+    followersCount: number;
+    followingCount: number;
 }
 
 export interface UserSearchResponse {
@@ -77,6 +80,9 @@ export interface UserSearchResponse {
     email: string;
     profilePicture?: Nullable<string>;
     dob: string;
+    followers: Nullable<User>[];
+    followersCount: number;
+    followingCount: number;
 }
 
 export interface IQuery {

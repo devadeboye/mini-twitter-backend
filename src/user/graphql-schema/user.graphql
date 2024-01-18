@@ -7,6 +7,9 @@ type User {
   email: String!
   profilePicture: String
   dob: String!
+  followers: [User]!
+  followersCount: Int!
+  followingCount: Int!
 }
 
 type UserSearchResponse {
@@ -17,6 +20,9 @@ type UserSearchResponse {
   email: String!
   profilePicture: String
   dob: String!
+  followers: [User]!
+  followersCount: Int!
+  followingCount: Int!
 }
 
 type Query {
