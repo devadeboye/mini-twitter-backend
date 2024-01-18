@@ -1,8 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcryptjs';
 import { EnvironmentEnum, EnvironmentType } from 'src/config/enums/config.enum';
 import { JwtService } from '@nestjs/jwt';
+import { TokenData } from '../dtos/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -45,5 +50,16 @@ export class AuthService {
   async generateJwt(payload: Record<string, unknown>) {
     const accessToken = await this.jwtService.signAsync(payload);
     return accessToken;
+  }
+
+  async verifyJwt(accessToken: string): Promise<TokenData> {
+    try {
+      const tokenData = (await this.jwtService.verifyAsync(accessToken, {
+        secret: this.configService.get<string>(EnvironmentEnum.TOKEN_SECRET),
+      })) as TokenData;
+      return tokenData;
+    } catch (error) {
+      throw new UnauthorizedException(error.message);
+    }
   }
 }

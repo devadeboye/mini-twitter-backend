@@ -22,7 +22,7 @@ export class AuthResolver {
       username: savedUser.username,
     });
 
-    this.authService.setCookie(context, 'twitter-clone', accessToken);
+    this.authService.setCookie(context, 'twitterClone', accessToken);
     return savedUser;
   }
 
@@ -40,7 +40,7 @@ export class AuthResolver {
       username: userProfile.username,
     });
 
-    this.authService.setCookie(context, 'twitter-clone', accessToken);
+    this.authService.setCookie(context, 'twitterClone', accessToken);
     return userProfile;
   }
 }

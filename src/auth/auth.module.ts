@@ -4,11 +4,20 @@ import { AuthService } from './services/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EnvironmentEnum } from 'src/config/enums/config.enum';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './guards/auth.guard';
 
 @Global()
 @Module({
-  providers: [AuthResolver, AuthService],
-  exports: [],
+  providers: [
+    AuthResolver,
+    AuthService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
+  exports: [AuthService],
   imports: [
     JwtModule.registerAsync({
       imports: [ConfigModule],
