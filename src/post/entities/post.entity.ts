@@ -1,10 +1,16 @@
 import { User } from 'src/user/entities/user.entity';
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Comment } from 'src/comment/entities/comment.entity';
 
 @Entity()
 export class Post {
-  @Column({ unique: true })
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()

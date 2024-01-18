@@ -1,5 +1,5 @@
 type User {
-  id: Int!
+  id: String!
   username: String!
   password: String!
   firstName: String!
@@ -10,7 +10,7 @@ type User {
 }
 
 type UserSearchResponse {
-  id: Int!
+  id: String!
   username: String!
   firstName: String!
   lastName: String!
@@ -20,7 +20,7 @@ type UserSearchResponse {
 }
 
 type Query {
-  getUser(id: Int!): UserSearchResponse
+  getUser(id: String!): UserSearchResponse
 }
 
 type Query {
@@ -28,5 +28,5 @@ type Query {
 }
 
 type Mutation {
-  removeUser(id: Int!): UserSearchResponse
+  removeUser(id: String!): UserSearchResponse
 }

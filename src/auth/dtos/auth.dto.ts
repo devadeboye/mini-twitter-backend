@@ -1,5 +1,5 @@
 export class TokenData {
-  sub: number; // this is the user id
+  sub: string; // this is the user id
   username: string;
 }
 

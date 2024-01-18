@@ -8,7 +8,7 @@ export class UserResolver {
 
   @Query()
   @UseToken()
-  async getUser(@Args('id') id: number) {
+  async getUser(@Args('id') id: string) {
     return this.userService.findOneBy({ id });
   }
 
@@ -20,7 +20,7 @@ export class UserResolver {
 
   @Mutation()
   @UseToken()
-  async removeUser(@Args('id') id: number) {
+  async removeUser(@Args('id') id: string) {
     return this.userService.remove({ id });
   }
 }

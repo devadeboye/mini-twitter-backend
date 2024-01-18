@@ -35,31 +35,31 @@ export interface SigninResponse {
 export interface IMutation {
     signup(user: SignupInput): Nullable<User> | Promise<Nullable<User>>;
     signin(credentials: SigninInput): Nullable<SigninResponse> | Promise<Nullable<SigninResponse>>;
-    removeUser(id: number): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
+    removeUser(id: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
 }
 
 export interface Comment {
-    id: number;
+    id: string;
     content: string;
     image?: Nullable<string>;
     likes?: Nullable<number>;
     retweet?: Nullable<number>;
-    post: number;
-    author: number;
+    post: Post;
+    author: User;
 }
 
 export interface Post {
-    id: number;
+    id: string;
     content: string;
     image?: Nullable<string>;
     likes?: Nullable<number>;
     retweet?: Nullable<number>;
     comments?: Nullable<Nullable<Comment>[]>;
-    author: number;
+    author: User;
 }
 
 export interface User {
-    id: number;
+    id: string;
     username: string;
     password: string;
     firstName: string;
@@ -70,7 +70,7 @@ export interface User {
 }
 
 export interface UserSearchResponse {
-    id: number;
+    id: string;
     username: string;
     firstName: string;
     lastName: string;
@@ -80,7 +80,7 @@ export interface UserSearchResponse {
 }
 
 export interface IQuery {
-    getUser(id: number): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
+    getUser(id: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
     getUserByUsernameOrEmail(identifier: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
 }
 
