@@ -24,7 +24,7 @@ import { AuthGuard } from './guards/auth.guard';
       useFactory: async (configService: ConfigService) => ({
         global: true,
         secret: configService.get<string>(EnvironmentEnum.TOKEN_SECRET),
-        signOptions: { expiresIn: 15 * 60 }, // 15 minutes
+        signOptions: { expiresIn: 3 * 60 }, // 15 minutes
       }),
       inject: [ConfigService],
     }),

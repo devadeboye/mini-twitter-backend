@@ -58,8 +58,16 @@ export class AuthService {
         secret: this.configService.get<string>(EnvironmentEnum.TOKEN_SECRET),
       })) as TokenData;
       return tokenData;
-    } catch (error) {
-      throw new UnauthorizedException(error.message);
+    } catch (err) {
+      if (err.name === 'TokenExpiredError') throw err;
+      throw new UnauthorizedException(err.message);
     }
+  }
+
+  async decodeJwt(accessToken: string): Promise<TokenData> {
+    const { payload } = (await this.jwtService.decode(accessToken, {
+      complete: true,
+    })) as { payload: TokenData };
+    return payload;
   }
 }

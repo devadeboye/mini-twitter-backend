@@ -13,11 +13,13 @@ export class UserResolver {
   }
 
   @Query()
+  @UseToken()
   async getUserByUsernameOrEmail(@Args('identifier') identifier: string) {
     return this.userService.findByUsernameOrEmail(identifier);
   }
 
   @Mutation()
+  @UseToken()
   async removeUser(@Args('id') id: number) {
     return this.userService.remove({ id });
   }
