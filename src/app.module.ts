@@ -39,6 +39,7 @@ import { AuthModule } from './auth/auth.module';
         database: configService.get(EnvironmentEnum.TYPEORM_DATABASE),
         entities: [User],
         synchronize: configService.get(EnvironmentEnum.TYPEORM_SYNCHRONIZE),
+        autoLoadEntities: true,
       }),
       inject: [ConfigService],
     }),

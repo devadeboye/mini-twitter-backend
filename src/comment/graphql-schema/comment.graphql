@@ -1,9 +1,9 @@
 type Comment {
-  id: Int!
+  id: String!
   content: String!
   image: String
   likes: Int
   retweet: Int
-  post: Int!
-  author: Int!
+  post: Post!
+  author: User!
 }
