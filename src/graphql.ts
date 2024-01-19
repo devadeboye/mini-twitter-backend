@@ -38,24 +38,15 @@ export interface IMutation {
     removeUser(id: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
 }
 
-export interface Comment {
+export interface Tweet {
     id: string;
     content: string;
-    image?: Nullable<string>;
-    likes?: Nullable<number>;
-    retweet?: Nullable<number>;
-    post: Post;
+    likes: number;
+    retweet: number;
     author: User;
-}
-
-export interface Post {
-    id: string;
-    content: string;
-    image?: Nullable<string>;
-    likes?: Nullable<number>;
-    retweet?: Nullable<number>;
-    comments?: Nullable<Nullable<Comment>[]>;
-    author: User;
+    tweetType: string;
+    commentToTweet?: Nullable<Tweet>;
+    numberOfComments: number;
 }
 
 export interface User {

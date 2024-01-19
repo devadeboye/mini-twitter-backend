@@ -1,0 +1,10 @@
+type Tweet {
+  id: String!
+  content: String!
+  likes: Int!
+  retweet: Int!
+  author: User!
+  tweetType: String!
+  commentToTweet: Tweet
+  numberOfComments: Int!
+}

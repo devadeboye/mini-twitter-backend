@@ -6,18 +6,15 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Comment } from 'src/comment/entities/comment.entity';
+import { TweetTypeEnum } from '../enums/tweet.enum';
 
 @Entity()
-export class Post {
+export class Tweet {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   content: string;
-
-  // @Column({ nullable: true })
-  // image: string;
 
   @Column({ default: 0 })
   likes: number;
@@ -28,6 +25,12 @@ export class Post {
   @ManyToOne(() => User, (user) => user.id, { eager: true })
   author: User;
 
-  @OneToMany(() => Comment, (comment) => comment.post)
-  comments: Comment[];
+  @Column({ type: 'enum', enum: TweetTypeEnum, default: TweetTypeEnum.Post })
+  tweetType: TweetTypeEnum;
+
+  @ManyToOne(() => Tweet, (tweet) => tweet.id)
+  commentToTweet: Tweet;
+
+  @Column({ default: 0 })
+  numberOfComments: number;
 }

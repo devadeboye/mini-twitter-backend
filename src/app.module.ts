@@ -12,8 +12,7 @@ import { EnvironmentEnum } from './config/enums/config.enum';
 import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { PostModule } from './post/post.module';
-import { CommentModule } from './comment/comment.module';
+import { TweetModule } from './tweet/tweet.module';
 
 @Module({
   imports: [
@@ -48,8 +47,7 @@ import { CommentModule } from './comment/comment.module';
 
     UserModule,
     AuthModule,
-    PostModule,
-    CommentModule,
+    TweetModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService],
