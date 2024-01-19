@@ -4,6 +4,8 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   ManyToOne,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
 @Entity()
@@ -32,11 +34,21 @@ export class User {
   @Column({ nullable: true })
   profilePicture?: string;
 
-  @OneToMany(() => User, (user) => user.followers)
-  following: User[];
+  // @ManyToOne(() => User, (user) => user.followers)
+  // following: User[];
 
-  @ManyToOne(() => User, (user) => user.id, { eager: true })
+  // @ManyToOne(() => User, (user) => user.id)
+  // followers: User[];
+
+  @ManyToMany(() => User, (user) => user.following)
+  @JoinTable({
+    joinColumn: { name: 'followerId' },
+    inverseJoinColumn: { name: 'followingId' },
+  })
   followers: User[];
+
+  @ManyToMany(() => User, (user) => user.followers)
+  following: User[];
 
   @Column({ default: 0 })
   followersCount: number;

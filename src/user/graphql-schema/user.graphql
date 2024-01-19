@@ -8,6 +8,7 @@ type User {
   profilePicture: String
   dob: String!
   followers: [User]!
+  following: [User]!
   followersCount: Int!
   followingCount: Int!
 }
@@ -20,9 +21,14 @@ type UserSearchResponse {
   email: String!
   profilePicture: String
   dob: String!
-  followers: [User]!
+  followers: [User]
+  following: [User]
   followersCount: Int!
   followingCount: Int!
+}
+
+type FollowUserResponse {
+  success: Boolean!
 }
 
 type Query {
@@ -35,4 +41,8 @@ type Query {
 
 type Mutation {
   removeUser(id: String!): UserSearchResponse
+}
+
+type Mutation {
+  followUser(user: String!): FollowUserResponse
 }

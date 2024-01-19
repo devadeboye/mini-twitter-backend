@@ -13,7 +13,7 @@ input SigninInput {
 }
 
 type SigninResponse {
-  id: Int!
+  id: String!
   username: String!
   firstName: String!
   lastName: String!

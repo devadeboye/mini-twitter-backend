@@ -2,6 +2,7 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -63,6 +64,7 @@ export class AuthGuard implements CanActivate {
             'twitterClone',
             newToken,
           );
+          Logger.debug('=========== token renewed =========');
           return true;
         }
         throw new UnauthorizedException(

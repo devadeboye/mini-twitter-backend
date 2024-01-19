@@ -41,6 +41,7 @@ import { TweetModule } from './tweet/tweet.module';
         entities: [User],
         synchronize: configService.get(EnvironmentEnum.TYPEORM_SYNCHRONIZE),
         autoLoadEntities: true,
+        migrations: [__dirname + '/src/db/migrations/**/*.ts'],
       }),
       inject: [ConfigService],
     }),

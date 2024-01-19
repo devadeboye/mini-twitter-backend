@@ -23,7 +23,7 @@ export interface SigninInput {
 }
 
 export interface SigninResponse {
-    id: number;
+    id: string;
     username: string;
     firstName: string;
     lastName: string;
@@ -36,6 +36,7 @@ export interface IMutation {
     signup(user: SignupInput): Nullable<User> | Promise<Nullable<User>>;
     signin(credentials: SigninInput): Nullable<SigninResponse> | Promise<Nullable<SigninResponse>>;
     removeUser(id: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
+    followUser(user: string): Nullable<FollowUserResponse> | Promise<Nullable<FollowUserResponse>>;
 }
 
 export interface Tweet {
@@ -59,6 +60,7 @@ export interface User {
     profilePicture?: Nullable<string>;
     dob: string;
     followers: Nullable<User>[];
+    following: Nullable<User>[];
     followersCount: number;
     followingCount: number;
 }
@@ -71,9 +73,14 @@ export interface UserSearchResponse {
     email: string;
     profilePicture?: Nullable<string>;
     dob: string;
-    followers: Nullable<User>[];
+    followers?: Nullable<Nullable<User>[]>;
+    following?: Nullable<Nullable<User>[]>;
     followersCount: number;
     followingCount: number;
+}
+
+export interface FollowUserResponse {
+    success: boolean;
 }
 
 export interface IQuery {

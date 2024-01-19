@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
@@ -21,5 +25,37 @@ export class UserService extends BaseService<User> {
       .getOne();
 
     return user;
+  }
+
+  async followUser(user: string, userToFollow: string) {
+    try {
+      const [userProfile, targetUser] = await Promise.all([
+        this.findOneBy({ id: user }),
+        this.findOneBy({ id: userToFollow }),
+      ]);
+
+      // add following and increase count
+      userProfile.following = userProfile.following
+        ? [...userProfile.following, targetUser]
+        : [targetUser];
+      userProfile.followingCount++;
+
+      // add follower and increase count
+      targetUser.followers = targetUser.followers
+        ? [...targetUser.followers, userProfile]
+        : [userProfile];
+      targetUser.followersCount++;
+
+      await this.usersRepository.manager.transaction(
+        async (transactionalEntityManager) => {
+          await transactionalEntityManager.save(userProfile);
+          await transactionalEntityManager.save(targetUser);
+        },
+      );
+      return { success: true };
+    } catch (err) {
+      Logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
   }
 }
