@@ -34,12 +34,6 @@ export class User {
   @Column({ nullable: true })
   profilePicture?: string;
 
-  // @ManyToOne(() => User, (user) => user.followers)
-  // following: User[];
-
-  // @ManyToOne(() => User, (user) => user.id)
-  // followers: User[];
-
   @ManyToMany(() => User, (user) => user.following)
   @JoinTable({
     joinColumn: { name: 'followerId' },

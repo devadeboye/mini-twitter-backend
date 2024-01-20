@@ -34,6 +34,18 @@ export class UserResolver {
     return this.userService.followUser(tokenData.sub, userToFollow);
   }
 
+  @Query()
+  @UseToken()
+  async getFollowers(@Args('user') user: string) {
+    return this.userService.getFollowers(user);
+  }
+
+  @Query()
+  @UseToken()
+  async getFollowings(@Args('user') user: string) {
+    return this.userService.getFollowings(user);
+  }
+
   // // TODO add resolver to unfollow a user
   // @Mutation()
   // async unFollowUser(

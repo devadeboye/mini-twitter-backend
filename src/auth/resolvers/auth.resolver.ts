@@ -1,4 +1,10 @@
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  GqlExecutionContext,
+  Mutation,
+  Resolver,
+} from '@nestjs/graphql';
 import { AuthService } from '../services/auth.service';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/services/user.service';

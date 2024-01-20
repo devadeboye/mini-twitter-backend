@@ -7,8 +7,6 @@ type User {
   email: String!
   profilePicture: String
   dob: String!
-  followers: [User]!
-  following: [User]!
   followersCount: Int!
   followingCount: Int!
 }
@@ -27,6 +25,18 @@ type UserSearchResponse {
   followingCount: Int!
 }
 
+type UserNameOrEmailSearchResponse {
+  id: String!
+  username: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+  profilePicture: String
+  dob: String!
+  followersCount: Int!
+  followingCount: Int!
+}
+
 type FollowUserResponse {
   success: Boolean!
 }
@@ -37,6 +47,14 @@ type Query {
 
 type Query {
   getUserByUsernameOrEmail(identifier: String!): UserSearchResponse
+}
+
+type Query {
+  getFollowers(user: String!): [User]
+}
+
+type Query {
+  getFollowings(user: String!): [User]
 }
 
 type Mutation {

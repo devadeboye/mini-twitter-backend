@@ -59,8 +59,6 @@ export interface User {
     email: string;
     profilePicture?: Nullable<string>;
     dob: string;
-    followers: Nullable<User>[];
-    following: Nullable<User>[];
     followersCount: number;
     followingCount: number;
 }
@@ -79,6 +77,18 @@ export interface UserSearchResponse {
     followingCount: number;
 }
 
+export interface UserNameOrEmailSearchResponse {
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    profilePicture?: Nullable<string>;
+    dob: string;
+    followersCount: number;
+    followingCount: number;
+}
+
 export interface FollowUserResponse {
     success: boolean;
 }
@@ -86,6 +96,8 @@ export interface FollowUserResponse {
 export interface IQuery {
     getUser(id: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
     getUserByUsernameOrEmail(identifier: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
+    getFollowers(user: string): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
+    getFollowings(user: string): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
 }
 
 type Nullable<T> = T | null;

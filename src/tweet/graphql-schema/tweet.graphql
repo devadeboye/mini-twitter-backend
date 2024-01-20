@@ -4,7 +4,12 @@ type Tweet {
   likes: Int!
   retweet: Int!
   author: User!
-  tweetType: String!
+  tweetType: TweetType!
   commentToTweet: Tweet
   numberOfComments: Int!
+}
+
+enum TweetType {
+  Post
+  Comment
 }
