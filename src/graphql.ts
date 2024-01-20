@@ -27,6 +27,10 @@ export interface SigninInput {
     password: string;
 }
 
+export interface CreateTweetInput {
+    content: string;
+}
+
 export interface SigninResponse {
     id: string;
     username: string;
@@ -40,6 +44,8 @@ export interface SigninResponse {
 export interface IMutation {
     signup(user: SignupInput): Nullable<User> | Promise<Nullable<User>>;
     signin(credentials: SigninInput): Nullable<SigninResponse> | Promise<Nullable<SigninResponse>>;
+    deleteTweet(id: string): Nullable<DeleteTweetResponse> | Promise<Nullable<DeleteTweetResponse>>;
+    createTweet(tweet: CreateTweetInput): Tweet | Promise<Tweet>;
     removeUser(id: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
     followUser(user: string): Nullable<FollowUserResponse> | Promise<Nullable<FollowUserResponse>>;
 }
@@ -53,6 +59,14 @@ export interface Tweet {
     tweetType: TweetType;
     commentToTweet?: Nullable<Tweet>;
     numberOfComments: number;
+}
+
+export interface DeleteTweetResponse {
+    success: boolean;
+}
+
+export interface ISubscription {
+    tweetCreated(): Tweet | Promise<Tweet>;
 }
 
 export interface User {

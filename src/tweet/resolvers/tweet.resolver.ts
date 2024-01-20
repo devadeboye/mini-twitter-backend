@@ -1,26 +1,45 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver, Subscription } from '@nestjs/graphql';
 import { TweetService } from '../services/tweet.service';
-import { UseToken } from 'src/auth/decorators/auth.decorator';
+import { UseToken, UserTokenData } from 'src/auth/decorators/auth.decorator';
 import { Tweet } from '../entities/tweet.entity';
+import { PubSub } from 'graphql-subscriptions';
+import { TweetEventEnum } from '../enums/tweet.enum';
+import { TokenData } from 'src/auth/dtos/auth.dto';
+import { UserService } from 'src/user/services/user.service';
 
-@Resolver('post')
-export class PostResolver {
-  constructor(private readonly postService: TweetService) {}
+@Resolver('Tweet')
+export class TweetResolver {
+  constructor(
+    private readonly pubSub: PubSub,
+    private readonly tweetService: TweetService,
+    private readonly userService: UserService,
+  ) {}
+
+  @Subscription(() => Tweet)
+  tweetCreated() {
+    return this.pubSub.asyncIterator(TweetEventEnum.TweetCreated);
+  }
 
   @Mutation()
   @UseToken()
-  async createPost(@Args() tweet: Tweet) {
-    return this.postService.createRecord(tweet);
+  async createTweet(
+    @Args('tweet') tweet: Tweet,
+    @UserTokenData() tokenData: TokenData,
+  ) {
+    const author = await this.userService.findOneBy({ id: tokenData.sub });
+    tweet.author = author;
+    const createdTweet = await this.tweetService.createRecord(tweet);
+    this.pubSub.publish(TweetEventEnum.TweetCreated, createdTweet);
+    return createdTweet;
   }
 
-  // @Query()
-  // @UseToken()
-  // async getUser(@Args('id') id: string) {
-  //   return this.userService.findOneBy({ id });
-  // }
+  @Mutation()
+  @UseToken()
+  async deleteTweet(@Args('id') id: string) {
+    return this.tweetService.removeOrErrorOut({ id });
+    return this.tweetService.remove({ id });
+  }
 }
-
-// TODO add resolver to create a post
 
 // TODO add resolver to delete a post
 

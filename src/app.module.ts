@@ -28,6 +28,9 @@ import { TweetModule } from './tweet/tweet.module';
       definitions: {
         path: join(process.cwd(), 'src/graphql.ts'),
       },
+      subscriptions: {
+        'graphql-ws': true,
+      },
     }),
 
     TypeOrmModule.forRootAsync({

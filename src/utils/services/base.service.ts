@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -18,6 +18,17 @@ export abstract class BaseService<T> {
 
   async remove(query: FindOptionsWhere<T>): Promise<void> {
     await this.repository.delete(query);
+  }
+
+  async removeOrErrorOut(
+    query: FindOptionsWhere<T>,
+    errorMessage: string = 'record not found!',
+  ) {
+    const data = await this.repository.delete(query);
+    if (data.affected === 0) {
+      throw new NotFoundException(errorMessage);
+    }
+    return { success: true, ...data };
   }
 
   findAll(): Promise<T[]> {

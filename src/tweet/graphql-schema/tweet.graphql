@@ -9,7 +9,27 @@ type Tweet {
   numberOfComments: Int!
 }
 
+input CreateTweetInput {
+  content: String!
+}
+
 enum TweetType {
   Post
   Comment
+}
+
+type DeleteTweetResponse {
+  success: Boolean!
+}
+
+type Mutation {
+  deleteTweet(id: String!): DeleteTweetResponse
+}
+
+type Mutation {
+  createTweet(tweet: CreateTweetInput!): Tweet!
+}
+
+type Subscription {
+  tweetCreated: Tweet!
 }
