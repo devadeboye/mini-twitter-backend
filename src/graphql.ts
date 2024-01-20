@@ -8,6 +8,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export enum TweetType {
+    Post = "Post",
+    Comment = "Comment"
+}
+
 export interface SignupInput {
     username: string;
     password: string;
@@ -45,7 +50,7 @@ export interface Tweet {
     likes: number;
     retweet: number;
     author: User;
-    tweetType: string;
+    tweetType: TweetType;
     commentToTweet?: Nullable<Tweet>;
     numberOfComments: number;
 }

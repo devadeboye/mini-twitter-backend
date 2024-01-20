@@ -1,10 +1,4 @@
-import {
-  Args,
-  Context,
-  GqlExecutionContext,
-  Mutation,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from '../services/auth.service';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/services/user.service';
@@ -27,8 +21,12 @@ export class AuthResolver {
       sub: savedUser.id,
       username: savedUser.username,
     });
+    const sessionId = await this.authService.generateJwt({
+      username: savedUser.username,
+    });
 
-    this.authService.setCookie(context, 'twitterClone', accessToken);
+    this.authService.setCookie(context, 'secInfo', accessToken);
+    this.authService.setCookie(context, 'sub', sessionId);
     return savedUser;
   }
 
@@ -45,8 +43,12 @@ export class AuthResolver {
       sub: userProfile.id,
       username: userProfile.username,
     });
+    const sessionId = await this.authService.generateJwt({
+      username: userProfile.username,
+    });
 
-    this.authService.setCookie(context, 'twitterClone', accessToken);
+    this.authService.setCookie(context, 'secInfo', accessToken);
+    this.authService.setCookie(context, 'sub', sessionId);
     return userProfile;
   }
 }

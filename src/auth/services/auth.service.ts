@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ExecutionContext,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -9,8 +8,7 @@ import * as bcrypt from 'bcryptjs';
 import { EnvironmentEnum, EnvironmentType } from 'src/config/enums/config.enum';
 import { JwtService } from '@nestjs/jwt';
 import { TokenData } from '../dtos/auth.dto';
-import { GqlExecutionContext } from '@nestjs/graphql';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -45,13 +43,17 @@ export class AuthService {
     const env = this.configService.get(EnvironmentEnum.NODE_ENV);
 
     res.cookie(key, value, {
-      httpOnly: true,
+      httpOnly: env === EnvironmentType.development ? true : false,
       secure: true,
       sameSite: env === EnvironmentType.production ? 'strict' : 'lax',
       maxAge: +this.configService.get(
         EnvironmentEnum.COOKIE_LIFESPAN_IN_MILLISECONDS,
       ),
     });
+  }
+
+  deleteCookie(res: Response, cookieName: string) {
+    res.cookie(cookieName, '', { expires: new Date(0) });
   }
 
   async generateJwt(payload: Record<string, unknown>) {
@@ -71,10 +73,10 @@ export class AuthService {
     }
   }
 
-  async decodeJwt(accessToken: string): Promise<TokenData> {
-    const { payload } = (await this.jwtService.decode(accessToken, {
+  async decodeJwt(accessToken: string) {
+    const { payload } = await this.jwtService.decode(accessToken, {
       complete: true,
-    })) as { payload: TokenData };
+    });
     return payload;
   }
 }
