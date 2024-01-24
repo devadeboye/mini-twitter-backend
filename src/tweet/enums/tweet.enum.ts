@@ -4,5 +4,5 @@ export enum TweetTypeEnum {
 }
 
 export enum TweetEventEnum {
-  TweetCreated = 'TweetCreated',
+  TweetCreated = 'tweetCreated',
 }

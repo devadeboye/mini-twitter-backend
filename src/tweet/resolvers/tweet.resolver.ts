@@ -6,6 +6,7 @@ import { PubSub } from 'graphql-subscriptions';
 import { TweetEventEnum } from '../enums/tweet.enum';
 import { TokenData } from 'src/auth/dtos/auth.dto';
 import { UserService } from 'src/user/services/user.service';
+import { TweetCreatedPayload } from '../dtos/tweet.dto';
 
 @Resolver('Tweet')
 export class TweetResolver {
@@ -15,8 +16,12 @@ export class TweetResolver {
     private readonly userService: UserService,
   ) {}
 
-  @Subscription(() => Tweet)
-  tweetCreated() {
+  @Subscription(TweetEventEnum.TweetCreated, {
+    filter: (payload: TweetCreatedPayload, variables) =>
+      payload.tweetCreated.author.id === variables.author ||
+      payload.tweetCreated.author.username === variables.author,
+  })
+  tweetCreated(@Args('author') author: string) {
     return this.pubSub.asyncIterator(TweetEventEnum.TweetCreated);
   }
 
@@ -29,7 +34,9 @@ export class TweetResolver {
     const author = await this.userService.findOneBy({ id: tokenData.sub });
     tweet.author = author;
     const createdTweet = await this.tweetService.createRecord(tweet);
-    this.pubSub.publish(TweetEventEnum.TweetCreated, createdTweet);
+    this.pubSub.publish(TweetEventEnum.TweetCreated, {
+      tweetCreated: createdTweet,
+    });
     return createdTweet;
   }
 
@@ -37,10 +44,5 @@ export class TweetResolver {
   @UseToken()
   async deleteTweet(@Args('id') id: string) {
     return this.tweetService.removeOrErrorOut({ id });
-    return this.tweetService.remove({ id });
   }
 }
-
-// TODO add resolver to delete a post
-
-// TODO update client side (followers) on new post. using graphql subscription

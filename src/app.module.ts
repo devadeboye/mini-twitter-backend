@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -28,9 +28,7 @@ import { TweetModule } from './tweet/tweet.module';
       definitions: {
         path: join(process.cwd(), 'src/graphql.ts'),
       },
-      subscriptions: {
-        'graphql-ws': true,
-      },
+      installSubscriptionHandlers: true,
     }),
 
     TypeOrmModule.forRootAsync({

@@ -14,4 +14,5 @@ export const environmentValidator = Joi.object().keys({
     .required(),
   [EnvironmentEnum.TOKEN_SECRET]: Joi.string().trim().required(),
   [EnvironmentEnum.COOKIE_LIFESPAN_IN_MILLISECONDS]: Joi.number().required(),
+  [EnvironmentEnum.GRAPHQL_PLAYGROUND]: Joi.boolean().default(false),
 });

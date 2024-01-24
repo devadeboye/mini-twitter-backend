@@ -66,7 +66,7 @@ export interface DeleteTweetResponse {
 }
 
 export interface ISubscription {
-    tweetCreated(): Tweet | Promise<Tweet>;
+    tweetCreated(author: string): Nullable<Tweet> | Promise<Nullable<Tweet>>;
 }
 
 export interface User {

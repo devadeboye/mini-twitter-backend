@@ -31,5 +31,5 @@ type Mutation {
 }
 
 type Subscription {
-  tweetCreated: Tweet!
+  tweetCreated(author: String!): Tweet
 }
