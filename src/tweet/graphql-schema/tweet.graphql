@@ -33,3 +33,7 @@ type Mutation {
 type Subscription {
   tweetCreated(author: String!): Tweet
 }
+
+type Query {
+  getTweets: [Tweet]
+}

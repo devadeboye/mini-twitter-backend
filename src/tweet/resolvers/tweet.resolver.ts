@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver, Subscription } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { TweetService } from '../services/tweet.service';
 import { UseToken, UserTokenData } from 'src/auth/decorators/auth.decorator';
 import { Tweet } from '../entities/tweet.entity';
@@ -44,5 +44,14 @@ export class TweetResolver {
   @UseToken()
   async deleteTweet(@Args('id') id: string) {
     return this.tweetService.removeOrErrorOut({ id });
+  }
+
+  @Query()
+  @UseToken()
+  async getTweets(@UserTokenData() tokenData: TokenData) {
+    const followings = await this.userService.getFollowings(tokenData.sub);
+    const followingsID = followings.map((following) => following.id);
+    const tweets = await this.tweetService.getTweets(followingsID);
+    return tweets;
   }
 }

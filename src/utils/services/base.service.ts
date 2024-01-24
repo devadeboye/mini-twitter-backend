@@ -1,5 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
+import {
+  FindManyOptions,
+  FindOneOptions,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -29,6 +34,10 @@ export abstract class BaseService<T> {
       throw new NotFoundException(errorMessage);
     }
     return { success: true, ...data };
+  }
+
+  findMany(query: FindManyOptions<T>): Promise<T[]> {
+    return this.repository.find();
   }
 
   findAll(): Promise<T[]> {

@@ -69,6 +69,14 @@ export interface ISubscription {
     tweetCreated(author: string): Nullable<Tweet> | Promise<Nullable<Tweet>>;
 }
 
+export interface IQuery {
+    getTweets(): Nullable<Nullable<Tweet>[]> | Promise<Nullable<Nullable<Tweet>[]>>;
+    getUser(id: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
+    getUserByUsernameOrEmail(identifier: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
+    getFollowers(user: string): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
+    getFollowings(user: string): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
+}
+
 export interface User {
     id: string;
     username: string;
@@ -110,13 +118,6 @@ export interface UserNameOrEmailSearchResponse {
 
 export interface FollowUserResponse {
     success: boolean;
-}
-
-export interface IQuery {
-    getUser(id: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
-    getUserByUsernameOrEmail(identifier: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
-    getFollowers(user: string): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
-    getFollowings(user: string): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
 }
 
 type Nullable<T> = T | null;
