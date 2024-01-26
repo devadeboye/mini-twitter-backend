@@ -44,7 +44,7 @@ export class TweetResolver {
       tweet.picture = savedImage;
     }
 
-    // TODO attach image to tweet
+    // attach image to tweet
     const createdTweet = await this.tweetService.createRecord(tweet);
     this.pubSub.publish(TweetEventEnum.TweetCreated, {
       tweetCreated: createdTweet,
@@ -55,7 +55,14 @@ export class TweetResolver {
   @Mutation()
   @UseToken()
   async deleteTweet(@Args('id') id: string) {
-    return this.tweetService.removeOrErrorOut({ id });
+    const tweet = await this.tweetService.findOneByOrErrorOut(
+      { id },
+      'tweet not found',
+    );
+    if (tweet.picture) {
+      await this.fileService.deleteFile(tweet.picture.id);
+    }
+    return this.tweetService.remove({ id });
   }
 
   @Query()
