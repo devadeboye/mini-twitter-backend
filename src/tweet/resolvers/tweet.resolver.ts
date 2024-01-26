@@ -36,7 +36,7 @@ export class TweetResolver {
     const author = await this.userService.findOneBy({ id: tokenData.sub });
     tweet.author = author;
 
-    // TODO save image if it exist
+    // save image if it exist
     if (tweetDetails.image) {
       const savedImage = await this.fileService.createRecord(
         tweetDetails.image,
