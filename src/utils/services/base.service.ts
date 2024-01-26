@@ -17,6 +17,17 @@ export abstract class BaseService<T> {
     return await this.repository.findOneBy(query);
   }
 
+  async findOneByOrErrorOut(
+    query: FindOptionsWhere<T> | FindOptionsWhere<T>[],
+    errorMessage: string = 'record not found!',
+  ): Promise<T> {
+    const data = await this.repository.findOneBy(query);
+    if (!data) {
+      throw new NotFoundException(errorMessage);
+    }
+    return data;
+  }
+
   async findOne(query: FindOneOptions<T>): Promise<T | undefined> {
     return await this.repository.findOne(query);
   }

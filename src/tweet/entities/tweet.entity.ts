@@ -1,13 +1,14 @@
 import { User } from '../../user/entities/user.entity';
-// import { User } from 'src/user/entities/user.entity';
 import {
   Entity,
   Column,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { TweetTypeEnum } from '../enums/tweet.enum';
+import { StoredFile } from 'src/file/entities/stored-file.entity';
 
 @Entity()
 export class Tweet {
@@ -34,4 +35,11 @@ export class Tweet {
 
   @Column({ default: 0 })
   numberOfComments: number;
+
+  @OneToOne(() => StoredFile, (storedFile) => storedFile.id, {
+    eager: true,
+    nullable: true,
+  })
+  @JoinColumn()
+  picture: StoredFile;
 }

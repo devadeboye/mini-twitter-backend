@@ -7,10 +7,31 @@ type Tweet {
   tweetType: TweetType!
   commentToTweet: Tweet
   numberOfComments: Int!
+  picture: StoredFile
+}
+
+input NewTweet {
+  content: String!
+}
+
+input NewImageInput {
+  publicId: String
+  version: Int
+  signature: String
+  width: Int
+  height: Int
+  format: String!
+  resourceType: String!
+  createdAt: String!
+  bytes: Int!
+  type: String
+  url: String!
+  secureUrl: String
 }
 
 input CreateTweetInput {
-  content: String!
+  tweet: NewTweet!
+  image: NewImageInput
 }
 
 enum TweetType {
@@ -27,7 +48,7 @@ type Mutation {
 }
 
 type Mutation {
-  createTweet(tweet: CreateTweetInput!): Tweet!
+  createTweet(tweetDetails: CreateTweetInput!): Tweet!
 }
 
 type Subscription {

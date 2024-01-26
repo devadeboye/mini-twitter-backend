@@ -1,12 +1,12 @@
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { TweetService } from '../services/tweet.service';
 import { UseToken, UserTokenData } from 'src/auth/decorators/auth.decorator';
-import { Tweet } from '../entities/tweet.entity';
 import { PubSub } from 'graphql-subscriptions';
 import { TweetEventEnum } from '../enums/tweet.enum';
 import { TokenData } from 'src/auth/dtos/auth.dto';
 import { UserService } from 'src/user/services/user.service';
-import { TweetCreatedPayload } from '../dtos/tweet.dto';
+import { NewTweet, TweetCreatedPayload } from '../dtos/tweet.dto';
+import { FileService } from 'src/file/services/file.service';
 
 @Resolver('Tweet')
 export class TweetResolver {
@@ -14,6 +14,7 @@ export class TweetResolver {
     private readonly pubSub: PubSub,
     private readonly tweetService: TweetService,
     private readonly userService: UserService,
+    private readonly fileService: FileService,
   ) {}
 
   @Subscription(TweetEventEnum.TweetCreated, {
@@ -28,11 +29,22 @@ export class TweetResolver {
   @Mutation()
   @UseToken()
   async createTweet(
-    @Args('tweet') tweet: Tweet,
+    @Args('tweetDetails') tweetDetails: NewTweet,
     @UserTokenData() tokenData: TokenData,
   ) {
+    const { tweet } = tweetDetails;
     const author = await this.userService.findOneBy({ id: tokenData.sub });
     tweet.author = author;
+
+    // TODO save image if it exist
+    if (tweetDetails.image) {
+      const savedImage = await this.fileService.createRecord(
+        tweetDetails.image,
+      );
+      tweet.picture = savedImage;
+    }
+
+    // TODO attach image to tweet
     const createdTweet = await this.tweetService.createRecord(tweet);
     this.pubSub.publish(TweetEventEnum.TweetCreated, {
       tweetCreated: createdTweet,

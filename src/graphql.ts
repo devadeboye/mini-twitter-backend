@@ -27,8 +27,28 @@ export interface SigninInput {
     password: string;
 }
 
-export interface CreateTweetInput {
+export interface NewTweet {
     content: string;
+}
+
+export interface NewImageInput {
+    publicId?: Nullable<string>;
+    version?: Nullable<number>;
+    signature?: Nullable<string>;
+    width?: Nullable<number>;
+    height?: Nullable<number>;
+    format: string;
+    resourceType: string;
+    createdAt: string;
+    bytes: number;
+    type?: Nullable<string>;
+    url: string;
+    secureUrl?: Nullable<string>;
+}
+
+export interface CreateTweetInput {
+    tweet: NewTweet;
+    image?: Nullable<NewImageInput>;
 }
 
 export interface SigninResponse {
@@ -45,9 +65,25 @@ export interface IMutation {
     signup(user: SignupInput): Nullable<User> | Promise<Nullable<User>>;
     signin(credentials: SigninInput): Nullable<SigninResponse> | Promise<Nullable<SigninResponse>>;
     deleteTweet(id: string): Nullable<DeleteTweetResponse> | Promise<Nullable<DeleteTweetResponse>>;
-    createTweet(tweet: CreateTweetInput): Tweet | Promise<Tweet>;
+    createTweet(tweetDetails: CreateTweetInput): Tweet | Promise<Tweet>;
     removeUser(id: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
     followUser(user: string): Nullable<FollowUserResponse> | Promise<Nullable<FollowUserResponse>>;
+}
+
+export interface StoredFile {
+    id: string;
+    publicId?: Nullable<string>;
+    version?: Nullable<number>;
+    signature?: Nullable<string>;
+    width?: Nullable<number>;
+    height?: Nullable<number>;
+    format: string;
+    resourceType: string;
+    createdAt: string;
+    bytes: number;
+    type?: Nullable<string>;
+    url: string;
+    secureUrl?: Nullable<string>;
 }
 
 export interface Tweet {
@@ -59,6 +95,7 @@ export interface Tweet {
     tweetType: TweetType;
     commentToTweet?: Nullable<Tweet>;
     numberOfComments: number;
+    picture?: Nullable<StoredFile>;
 }
 
 export interface DeleteTweetResponse {

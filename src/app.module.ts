@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -13,6 +13,8 @@ import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { TweetModule } from './tweet/tweet.module';
+import { CloudinaryModule } from 'nestjs-cloudinary';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -29,6 +31,7 @@ import { TweetModule } from './tweet/tweet.module';
         path: join(process.cwd(), 'src/graphql.ts'),
       },
       installSubscriptionHandlers: true,
+      // resolvers: { Upload },
     }),
 
     TypeOrmModule.forRootAsync({
@@ -47,9 +50,21 @@ import { TweetModule } from './tweet/tweet.module';
       inject: [ConfigService],
     }),
 
+    CloudinaryModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        isGlobal: true,
+        cloud_name: configService.get(EnvironmentEnum.CLOUDINARY_CLOUD_NAME),
+        api_key: configService.get(EnvironmentEnum.CLOUDINARY_API_KEY),
+        api_secret: configService.get(EnvironmentEnum.CLOUDINARY_API_SECRET),
+      }),
+      inject: [ConfigService],
+    }),
+
     UserModule,
     AuthModule,
     TweetModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService],
