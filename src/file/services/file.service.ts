@@ -14,10 +14,17 @@ export class FileService extends BaseService<StoredFile> {
     super(fileRepository);
   }
 
+  async deleteCloudinaryImages(resource: string[]) {
+    cloudinary.api
+      .delete_resources(resource, { type: 'upload', resource_type: 'image' })
+      .then(console.log);
+  }
+
   async deleteFile(id: string) {
     const file = await this.findOneByOrErrorOut({ id }, 'file not found');
 
-    // TODO delete file on cloudinary
+    // delete file on cloudinary
+    await this.deleteCloudinaryImages([file.publicId]);
 
     // delete file in db
     this.remove({ id });
