@@ -12,8 +12,9 @@ import { EnvironmentEnum } from './config/enums/config.enum';
 import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { PostModule } from './post/post.module';
-import { CommentModule } from './comment/comment.module';
+import { TweetModule } from './tweet/tweet.module';
+import { CloudinaryModule } from 'nestjs-cloudinary';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -29,6 +30,8 @@ import { CommentModule } from './comment/comment.module';
       definitions: {
         path: join(process.cwd(), 'src/graphql.ts'),
       },
+      installSubscriptionHandlers: true,
+      // resolvers: { Upload },
     }),
 
     TypeOrmModule.forRootAsync({
@@ -42,14 +45,26 @@ import { CommentModule } from './comment/comment.module';
         entities: [User],
         synchronize: configService.get(EnvironmentEnum.TYPEORM_SYNCHRONIZE),
         autoLoadEntities: true,
+        migrations: [__dirname + '/src/db/migrations/**/*.ts'],
+      }),
+      inject: [ConfigService],
+    }),
+
+    CloudinaryModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        isGlobal: true,
+        cloud_name: configService.get(EnvironmentEnum.CLOUDINARY_CLOUD_NAME),
+        api_key: configService.get(EnvironmentEnum.CLOUDINARY_API_KEY),
+        api_secret: configService.get(EnvironmentEnum.CLOUDINARY_API_SECRET),
       }),
       inject: [ConfigService],
     }),
 
     UserModule,
     AuthModule,
-    PostModule,
-    CommentModule,
+    TweetModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService],

@@ -1,9 +1,0 @@
-type Post {
-  id: String!
-  content: String!
-  image: String
-  likes: Int
-  retweet: Int
-  comments: [Comment]
-  author: User!
-}

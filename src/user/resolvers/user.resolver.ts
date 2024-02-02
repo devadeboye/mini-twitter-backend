@@ -1,6 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from '../services/user.service';
-import { UseToken } from 'src/auth/decorators/auth.decorator';
+import { UseToken, UserTokenData } from 'src/auth/decorators/auth.decorator';
+import { TokenData } from 'src/auth/dtos/auth.dto';
 
 @Resolver('User')
 export class UserResolver {
@@ -23,4 +24,34 @@ export class UserResolver {
   async removeUser(@Args('id') id: string) {
     return this.userService.remove({ id });
   }
+
+  @Mutation()
+  @UseToken()
+  async followUser(
+    @Args('user') userToFollow: string,
+    @UserTokenData() tokenData: TokenData,
+  ) {
+    return this.userService.followUser(tokenData.sub, userToFollow);
+  }
+
+  @Query()
+  @UseToken()
+  async getFollowers(@Args('user') user: string) {
+    return this.userService.getFollowers(user);
+  }
+
+  @Query()
+  @UseToken()
+  async getFollowings(@Args('user') user: string) {
+    return this.userService.getFollowings(user);
+  }
+
+  // // TODO add resolver to unfollow a user
+  // @Mutation()
+  // async unFollowUser(
+  //   @Args('user') userToUnFollow: string,
+  //   @UserTokenData() tokenData: TokenData,
+  // ) {
+  //   return this.userService.followUser(tokenData.sub, userToUnFollow);
+  // }
 }

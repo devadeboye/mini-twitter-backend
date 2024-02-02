@@ -1,0 +1,15 @@
+type StoredFile {
+  id: String!
+  publicId: String
+  version: Int
+  signature: String
+  width: Int
+  height: Int
+  format: String!
+  resourceType: String!
+  createdAt: String!
+  bytes: Int!
+  type: String
+  url: String!
+  secureUrl: String
+}

@@ -1,5 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  FindManyOptions,
+  FindOneOptions,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -12,12 +17,38 @@ export abstract class BaseService<T> {
     return await this.repository.findOneBy(query);
   }
 
+  async findOneByOrErrorOut(
+    query: FindOptionsWhere<T> | FindOptionsWhere<T>[],
+    errorMessage: string = 'record not found!',
+  ): Promise<T> {
+    const data = await this.repository.findOneBy(query);
+    if (!data) {
+      throw new NotFoundException(errorMessage);
+    }
+    return data;
+  }
+
   async findOne(query: FindOneOptions<T>): Promise<T | undefined> {
     return await this.repository.findOne(query);
   }
 
   async remove(query: FindOptionsWhere<T>): Promise<void> {
     await this.repository.delete(query);
+  }
+
+  async removeOrErrorOut(
+    query: FindOptionsWhere<T>,
+    errorMessage: string = 'record not found!',
+  ) {
+    const data = await this.repository.delete(query);
+    if (data.affected === 0) {
+      throw new NotFoundException(errorMessage);
+    }
+    return { success: true, ...data };
+  }
+
+  findMany(query: FindManyOptions<T>): Promise<T[]> {
+    return this.repository.find();
   }
 
   findAll(): Promise<T[]> {

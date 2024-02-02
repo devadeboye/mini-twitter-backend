@@ -8,6 +8,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export enum TweetType {
+    Post = "Post",
+    Comment = "Comment"
+}
+
 export interface SignupInput {
     username: string;
     password: string;
@@ -22,8 +27,32 @@ export interface SigninInput {
     password: string;
 }
 
+export interface NewTweet {
+    content: string;
+}
+
+export interface NewImageInput {
+    publicId?: Nullable<string>;
+    version?: Nullable<number>;
+    signature?: Nullable<string>;
+    width?: Nullable<number>;
+    height?: Nullable<number>;
+    format: string;
+    resourceType: string;
+    createdAt: string;
+    bytes: number;
+    type?: Nullable<string>;
+    url: string;
+    secureUrl?: Nullable<string>;
+}
+
+export interface CreateTweetInput {
+    tweet: NewTweet;
+    image?: Nullable<NewImageInput>;
+}
+
 export interface SigninResponse {
-    id: number;
+    id: string;
     username: string;
     firstName: string;
     lastName: string;
@@ -35,27 +64,54 @@ export interface SigninResponse {
 export interface IMutation {
     signup(user: SignupInput): Nullable<User> | Promise<Nullable<User>>;
     signin(credentials: SigninInput): Nullable<SigninResponse> | Promise<Nullable<SigninResponse>>;
+    deleteTweet(id: string): Nullable<DeleteTweetResponse> | Promise<Nullable<DeleteTweetResponse>>;
+    createTweet(tweetDetails: CreateTweetInput): Tweet | Promise<Tweet>;
     removeUser(id: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
+    followUser(user: string): Nullable<FollowUserResponse> | Promise<Nullable<FollowUserResponse>>;
 }
 
-export interface Comment {
+export interface StoredFile {
     id: string;
-    content: string;
-    image?: Nullable<string>;
-    likes?: Nullable<number>;
-    retweet?: Nullable<number>;
-    post: Post;
-    author: User;
+    publicId?: Nullable<string>;
+    version?: Nullable<number>;
+    signature?: Nullable<string>;
+    width?: Nullable<number>;
+    height?: Nullable<number>;
+    format: string;
+    resourceType: string;
+    createdAt: string;
+    bytes: number;
+    type?: Nullable<string>;
+    url: string;
+    secureUrl?: Nullable<string>;
 }
 
-export interface Post {
+export interface Tweet {
     id: string;
     content: string;
-    image?: Nullable<string>;
-    likes?: Nullable<number>;
-    retweet?: Nullable<number>;
-    comments?: Nullable<Nullable<Comment>[]>;
+    likes: number;
+    retweet: number;
     author: User;
+    tweetType: TweetType;
+    commentToTweet?: Nullable<Tweet>;
+    numberOfComments: number;
+    picture?: Nullable<StoredFile>;
+}
+
+export interface DeleteTweetResponse {
+    success: boolean;
+}
+
+export interface ISubscription {
+    tweetCreated(author: string): Nullable<Tweet> | Promise<Nullable<Tweet>>;
+}
+
+export interface IQuery {
+    getTweets(): Nullable<Nullable<Tweet>[]> | Promise<Nullable<Nullable<Tweet>[]>>;
+    getUser(id: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
+    getUserByUsernameOrEmail(identifier: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
+    getFollowers(user: string): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
+    getFollowings(user: string): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
 }
 
 export interface User {
@@ -67,6 +123,8 @@ export interface User {
     email: string;
     profilePicture?: Nullable<string>;
     dob: string;
+    followersCount: number;
+    followingCount: number;
 }
 
 export interface UserSearchResponse {
@@ -77,11 +135,26 @@ export interface UserSearchResponse {
     email: string;
     profilePicture?: Nullable<string>;
     dob: string;
+    followers?: Nullable<Nullable<User>[]>;
+    following?: Nullable<Nullable<User>[]>;
+    followersCount: number;
+    followingCount: number;
 }
 
-export interface IQuery {
-    getUser(id: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
-    getUserByUsernameOrEmail(identifier: string): Nullable<UserSearchResponse> | Promise<Nullable<UserSearchResponse>>;
+export interface UserNameOrEmailSearchResponse {
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    profilePicture?: Nullable<string>;
+    dob: string;
+    followersCount: number;
+    followingCount: number;
+}
+
+export interface FollowUserResponse {
+    success: boolean;
 }
 
 type Nullable<T> = T | null;

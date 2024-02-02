@@ -1,0 +1,1 @@
+yarn run typeorm migration:revert -d ormconfig.ts

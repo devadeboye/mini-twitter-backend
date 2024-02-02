@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -25,4 +33,20 @@ export class User {
 
   @Column({ nullable: true })
   profilePicture?: string;
+
+  @ManyToMany(() => User, (user) => user.following)
+  @JoinTable({
+    joinColumn: { name: 'followerId' },
+    inverseJoinColumn: { name: 'followingId' },
+  })
+  followers: User[];
+
+  @ManyToMany(() => User, (user) => user.followers)
+  following: User[];
+
+  @Column({ default: 0 })
+  followersCount: number;
+
+  @Column({ default: 0 })
+  followingCount: number;
 }

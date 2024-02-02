@@ -1,0 +1,60 @@
+type Tweet {
+  id: String!
+  content: String!
+  likes: Int!
+  retweet: Int!
+  author: User!
+  tweetType: TweetType!
+  commentToTweet: Tweet
+  numberOfComments: Int!
+  picture: StoredFile
+}
+
+input NewTweet {
+  content: String!
+}
+
+input NewImageInput {
+  publicId: String
+  version: Int
+  signature: String
+  width: Int
+  height: Int
+  format: String!
+  resourceType: String!
+  createdAt: String!
+  bytes: Int!
+  type: String
+  url: String!
+  secureUrl: String
+}
+
+input CreateTweetInput {
+  tweet: NewTweet!
+  image: NewImageInput
+}
+
+enum TweetType {
+  Post
+  Comment
+}
+
+type DeleteTweetResponse {
+  success: Boolean!
+}
+
+type Mutation {
+  deleteTweet(id: String!): DeleteTweetResponse
+}
+
+type Mutation {
+  createTweet(tweetDetails: CreateTweetInput!): Tweet!
+}
+
+type Subscription {
+  tweetCreated(author: String!): Tweet
+}
+
+type Query {
+  getTweets: [Tweet]
+}

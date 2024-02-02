@@ -4,5 +4,10 @@ export class TokenData {
 }
 
 export class CookieDto {
-  twitterClone: string;
+  sub: string;
+  secInfo: string;
+}
+
+export class SessionDataDto {
+  username: string;
 }

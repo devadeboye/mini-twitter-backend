@@ -1,0 +1,1 @@
+yarn run typeorm migration:create ./src/db/migrations/$1
